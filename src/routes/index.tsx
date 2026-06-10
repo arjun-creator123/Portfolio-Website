@@ -1,29 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Portfolio } from "@/components/Portfolio";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Portfolio — AI, IoT & Real-time Systems Engineer" },
+      { name: "description", content: "Interactive portfolio showcasing AI/ML, IoT, and real-time architecture projects with immersive 3D and motion design." },
+      { property: "og:title", content: "Portfolio — AI, IoT & Real-time Systems Engineer" },
+      { property: "og:description", content: "Selected work across computer vision, predictive modeling, and decentralized identity systems." },
     ],
   }),
-  component: Index,
+  component: Portfolio,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
