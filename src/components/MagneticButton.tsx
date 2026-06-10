@@ -6,9 +6,11 @@ interface Props {
   href?: string;
   variant?: "primary" | "secondary";
   onClick?: () => void;
+  target?: string;
+  rel?: string;
 }
 
-export function MagneticButton({ children, href, variant = "primary", onClick }: Props) {
+export function MagneticButton({ children, href, variant = "primary", onClick, target, rel }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -37,6 +39,8 @@ export function MagneticButton({ children, href, variant = "primary", onClick }:
     <motion.a
       ref={ref}
       href={href}
+      target={target}
+      rel={rel}
       onClick={onClick}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}

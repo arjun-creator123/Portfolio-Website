@@ -1,31 +1,61 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
-import { useRef, Suspense } from "react";
-import type { Mesh } from "three";
+import { Canvas } from "@react-three/fiber";
+import { useTexture, Environment } from "@react-three/drei";
+import { Suspense, useMemo } from "react";
+import * as THREE from "three";
 
-function Knot() {
-  const ref = useRef<Mesh>(null);
-  useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.x += delta * 0.15;
-      ref.current.rotation.y += delta * 0.2;
-    }
-  });
+function ProfileImage() {
+  const texture = useTexture("/IMG20241103184700.jpg");
+  
+  const shaderMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        map: { value: texture },
+        radius: { value: 0.15 },
+        resolution: { value: new THREE.Vector2(512, 512) },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D map;
+        uniform float radius;
+        varying vec2 vUv;
+        
+        float roundedBoxSDF(vec2 pos, vec2 size, float radius) {
+          return length(max(abs(pos) - size + radius, 0.0)) - radius;
+        }
+        
+        void main() {
+          vec2 center = vUv - 0.5;
+          float dist = roundedBoxSDF(center, vec2(0.5), radius);
+          
+          // Gradient color based on distance from center
+          vec3 gradientColor = mix(
+            mix(vec3(0.66, 0.33, 0.97), vec3(0.13, 0.82, 0.93), vUv.x),
+            vec3(0.06, 0.72, 0.50),
+            vUv.y
+          );
+          
+          vec4 texColor = texture2D(map, vUv);
+          float edgeGradient = smoothstep(0.1, -0.1, dist);
+          vec3 finalColor = mix(gradientColor, texColor.rgb, 0.9 + edgeGradient * 0.1);
+          
+          gl_FragColor = vec4(finalColor, smoothstep(0.05, -0.05, dist));
+        }
+      `,
+      transparent: true,
+    });
+  }, [texture]);
+  
   return (
-    <Float speed={1.4} rotationIntensity={0.6} floatIntensity={1.2}>
-      <mesh ref={ref} scale={1.6}>
-        <torusKnotGeometry args={[1, 0.32, 220, 32]} />
-        <MeshDistortMaterial
-          color="#a855f7"
-          emissive="#22d3ee"
-          emissiveIntensity={0.35}
-          roughness={0.15}
-          metalness={0.85}
-          distort={0.35}
-          speed={1.8}
-        />
-      </mesh>
-    </Float>
+    <mesh scale={1.6}>
+      <planeGeometry args={[1.5, 2]} />
+      <primitive object={shaderMaterial} />
+    </mesh>
   );
 }
 
@@ -40,7 +70,7 @@ export function HeroScene() {
       <pointLight position={[5, 5, 5]} intensity={1.4} color="#22d3ee" />
       <pointLight position={[-5, -3, -5]} intensity={1.2} color="#a855f7" />
       <Suspense fallback={null}>
-        <Knot />
+        <ProfileImage />
         <Environment preset="city" />
       </Suspense>
     </Canvas>
