@@ -44,16 +44,25 @@ const fadeUp = {
 
 export function Portfolio() {
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen text-foreground">
+      {/* Gradient backdrop (sits behind particles) */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-20"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 20% 0%, oklch(0.28 0.18 295 / 0.55), transparent 60%), radial-gradient(ellipse 70% 60% at 100% 30%, oklch(0.32 0.16 220 / 0.5), transparent 60%), radial-gradient(ellipse 80% 60% at 30% 100%, oklch(0.28 0.16 180 / 0.45), transparent 65%), linear-gradient(180deg, oklch(0.09 0.03 280) 0%, oklch(0.07 0.025 270) 50%, oklch(0.06 0.02 260) 100%)",
+        }}
+      />
+
       <ParticleBackground />
 
       {/* Ambient blobs */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full opacity-30 blur-[120px]"
+        <div className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full opacity-40 blur-[120px]"
           style={{ background: "var(--neon-purple)" }} />
-        <div className="absolute top-1/2 -right-40 w-[520px] h-[520px] rounded-full opacity-25 blur-[140px]"
+        <div className="absolute top-1/2 -right-40 w-[520px] h-[520px] rounded-full opacity-30 blur-[140px]"
           style={{ background: "var(--neon-cyan)" }} />
-        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-20 blur-[120px]"
+        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-25 blur-[120px]"
           style={{ background: "var(--neon-emerald)" }} />
       </div>
 
