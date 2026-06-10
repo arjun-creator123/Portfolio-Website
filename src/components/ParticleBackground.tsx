@@ -21,7 +21,7 @@ export function ParticleBackground() {
     <Particles
       id="tsparticles"
       init={init}
-      className="fixed inset-0 -z-10"
+      className="fixed inset-0 -z-10 pointer-events-none"
       options={{
         fullScreen: { enable: false },
         background: { color: { value: "transparent" } },
