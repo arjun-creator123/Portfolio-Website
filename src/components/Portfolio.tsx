@@ -57,7 +57,7 @@ export function Portfolio() {
       <ParticleBackground />
 
       {/* Ambient blobs */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
         <div className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full opacity-40 blur-[120px]"
           style={{ background: "var(--neon-purple)" }} />
         <div className="absolute top-1/2 -right-40 w-[520px] h-[520px] rounded-full opacity-30 blur-[140px]"
