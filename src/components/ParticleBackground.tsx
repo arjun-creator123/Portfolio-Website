@@ -25,7 +25,6 @@ export function ParticleBackground() {
       options={{
         fullScreen: { enable: false },
         background: { color: { value: "transparent" } },
-        background: { color: { value: "transparent" } },
         fpsLimit: 60,
         interactivity: {
           events: {
