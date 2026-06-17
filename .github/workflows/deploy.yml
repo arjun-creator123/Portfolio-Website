@@ -1,0 +1,68 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Prepare static assets for GitHub Pages
+        run: |
+          mkdir -p dist-static
+          cp -r dist/client/* dist-static/
+          # Create index.html dynamically
+          JS_FILE=$(ls dist-static/assets/index-*.js | head -1 | xargs basename)
+          CSS_FILE=$(ls dist-static/assets/styles-*.css | head -1 | xargs basename)
+          cat > dist-static/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Portfolio</title>
+            <link rel="stylesheet" href="./assets/CSS_FILE">
+          </head>
+          <body>
+            <div id="root"></div>
+            <script type="module" src="./assets/JS_FILE"></script>
+          </body>
+          </html>
+          EOF
+          sed -i "s|CSS_FILE|$CSS_FILE|g; s|JS_FILE|$JS_FILE|g" dist-static/index.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: './dist-static'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
